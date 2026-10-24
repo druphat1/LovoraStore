@@ -8,7 +8,7 @@ import { IconComponent } from './icon.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      class="fixed z-[70] left-1/2 -translate-x-1/2 top-24 md:top-auto md:left-auto md:translate-x-0 md:right-6 md:bottom-6 flex flex-col gap-2 w-[calc(100%-2rem)] max-w-sm pointer-events-none"
+      class="fixed z-[70] left-1/2 -translate-x-1/2 top-24 md:top-auto md:left-auto md:translate-x-0 md:right-6 md:bottom-24 flex flex-col gap-2 w-[calc(100%-2rem)] max-w-sm pointer-events-none"
       role="status"
       aria-live="polite"
     >

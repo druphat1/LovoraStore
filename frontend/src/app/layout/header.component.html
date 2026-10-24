@@ -6,7 +6,11 @@
         <ul class="flex shrink-0 items-center" [attr.aria-hidden]="copy === 1 ? 'true' : null">
           @for (a of announcements; track a.text) {
             <li class="flex items-center gap-space-xs px-6 md:px-10 whitespace-nowrap">
-              <app-icon [name]="a.icon" [size]="16" />
+              @if (a.icon === 'instagram') {
+                <app-instagram-icon [size]="16" />
+              } @else {
+                <app-icon [name]="a.icon" [size]="16" />
+              }
               @if (a.href) {
                 <a [href]="a.href" target="_blank" rel="noopener" class="hover:underline" [attr.tabindex]="copy === 1 ? -1 : null">{{ a.text }}</a>
               } @else {

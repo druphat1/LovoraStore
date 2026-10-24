@@ -238,6 +238,25 @@ input.check:checked::before {
 .btn-animated .nudge { animation: lgc-nudge 1.2s ease-in-out infinite; }
 .btn-animated:hover .nudge { animation-duration: 0.6s; }
 
+/* Floating scroll-down button: wheel inside the mouse icon nudges down */
+@keyframes lgc-wheel {
+  0% { transform: translateY(0); opacity: 1; }
+  70% { transform: translateY(6px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+.scroll-wheel { animation: lgc-wheel 1.6s ease-in-out infinite; }
+
+/* Reel viewer buttons: subtle white focus ring for keyboard users instead of the pink default */
+.viewer-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+}
+
+/* Instagram brand gradient for the reels section */
+.ig-gradient {
+  background: linear-gradient(45deg, #f09433, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888);
+}
+
 /* ---- Diwali section: twinkling string-light bulbs ---- */
 @keyframes lgc-bulb {
   0%, 100% { opacity: 1; box-shadow: 0 0 10px 3px var(--bulb), 0 0 22px 6px color-mix(in srgb, var(--bulb) 45%, transparent); }

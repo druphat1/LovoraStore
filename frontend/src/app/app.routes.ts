@@ -11,7 +11,7 @@ export const routes: Routes = [
     data: { mobileTitle: 'Product Details', hideBottomNav: true },
     loadComponent: () => import('./pages/product/product.component').then((m) => m.ProductComponent),
   },
-  { path: 'hamper-studio', title: page('Custom Gift Hamper Studio'), loadComponent: () => import('./pages/hamper/hamper.component').then((m) => m.HamperComponent) },
+  { path: 'hamper-studio', title: page('Custom Gift Hamper Studio'), data: { raiseFloating: true }, loadComponent: () => import('./pages/hamper/hamper.component').then((m) => m.HamperComponent) },
   { path: 'cart', title: page('Shopping Bag & Checkout'), loadComponent: () => import('./pages/cart/cart.component').then((m) => m.CartComponent) },
   { path: 'order/:id', title: page('Order Confirmed'), loadComponent: () => import('./pages/order/order.component').then((m) => m.OrderComponent) },
   { path: 'wishlist', title: page('Wishlist'), loadComponent: () => import('./pages/wishlist/wishlist.component').then((m) => m.WishlistComponent) },

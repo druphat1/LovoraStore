@@ -11,10 +11,11 @@ import { ToastService } from '../../core/services/toast.service';
 import { ProductCardComponent } from '../../shared/product/product-card.component';
 import { IconComponent } from '../../shared/ui/icon.component';
 import { HeroToylandComponent } from './hero-toyland.component';
+import { InstaReelsComponent } from './insta-reels.component';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, IconComponent, ProductCardComponent, HeroToylandComponent],
+  imports: [RouterLink, IconComponent, ProductCardComponent, HeroToylandComponent, InstaReelsComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.component.html',
 })

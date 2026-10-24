@@ -68,6 +68,7 @@ public/images/store/       ← photos of the real shop
 - **Products, prices, stock, images:** `src/app/core/data/products.ts`
 - **Coupons** (`BDAYLOVE`, `FIRSTGIFT`, `FESTIVE10`): `src/app/core/lib/pricing.ts`
 - **Hamper boxes and goodies:** `src/app/core/data/hamper.ts`
+- **Instagram reels on the homepage:** put `.mp4` files in `public/videos/` and list them in `src/app/core/config/instagram.ts`. Until at least one is listed, the section shows a "Follow @lovelygiftcenter" banner.
 
 ## What needs a backend
 

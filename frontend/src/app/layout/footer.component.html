@@ -16,6 +16,7 @@
         </div>
         <div class="flex items-center gap-space-sm">
           <a [href]="wa" target="_blank" rel="noopener" aria-label="WhatsApp" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"><app-icon name="chat" [size]="18" /></a>
+          <a [href]="ig.url" target="_blank" rel="noopener" [attr.aria-label]="'Instagram @' + ig.handle" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-white hover:bg-[#dc2743] transition-colors"><app-instagram-icon /></a>
           <a [href]="store.phoneHref" aria-label="Call the store" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"><app-icon name="call" [size]="18" /></a>
           <a [href]="'mailto:' + store.email" aria-label="Email" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"><app-icon name="mail" [size]="18" /></a>
           <a routerLink="/about" aria-label="Visit the store" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"><app-icon name="storefront" [size]="18" /></a>
@@ -44,6 +45,7 @@
           <span class="flex items-start gap-space-xs"><app-icon name="location_on" [size]="18" class="text-primary mt-0.5" />{{ address }}</span>
           <a [href]="store.phoneHref" class="flex items-center gap-space-xs hover:text-primary"><app-icon name="call" [size]="18" class="text-primary" />{{ store.phoneDisplay }}</a>
           <a [href]="wa" target="_blank" rel="noopener" class="flex items-center gap-space-xs hover:text-primary"><app-icon name="chat" [size]="18" class="text-secondary" />Instant WhatsApp: {{ store.phoneDisplay }}</a>
+          <a [href]="ig.url" target="_blank" rel="noopener" class="flex items-center gap-space-xs hover:text-primary"><app-instagram-icon class="text-[#dc2743]" />Instagram: &#64;{{ ig.handle }}</a>
         </div>
         <form (submit)="join($event)" class="bg-surface-container-lowest p-space-md rounded-2xl shadow-[0_2px_12px_rgba(113,42,226,0.06)]" novalidate>
           <span class="font-headline-sm text-sm text-on-surface font-semibold block mb-space-xs">Festive Discount Club</span>
@@ -96,6 +98,7 @@
     </div>
   </div>
   <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-label-badge text-label-badge text-on-surface-variant">
+    <a [href]="ig.url" target="_blank" rel="noopener" class="flex items-center gap-1 text-[#dc2743]"><app-instagram-icon [size]="14" />Instagram</a><span>•</span>
     <a routerLink="/help" fragment="returns" class="hover:text-primary">Return Policy</a><span>•</span>
     <a routerLink="/help" fragment="shipping" class="hover:text-primary">Shipping Info</a><span>•</span>
     <a routerLink="/help" fragment="terms" class="hover:text-primary">Privacy &amp; Terms</a>

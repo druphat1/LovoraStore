@@ -1,20 +1,23 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { INSTAGRAM } from '../core/config/instagram';
 import { FULL_ADDRESS, STORE } from '../core/config/store';
 import { whatsappLink } from '../core/lib/whatsapp';
 import { ToastService } from '../core/services/toast.service';
 import { IconComponent } from '../shared/ui/icon.component';
+import { InstagramIconComponent } from '../shared/ui/instagram-icon.component';
 
 @Component({
   selector: 'app-footer',
-  imports: [FormsModule, RouterLink, IconComponent],
+  imports: [FormsModule, RouterLink, IconComponent, InstagramIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './footer.component.html',
 })
 export class FooterComponent {
   private toast = inject(ToastService);
   store = STORE;
+  ig = INSTAGRAM;
   address = FULL_ADDRESS;
   year = new Date().getFullYear();
   wa = whatsappLink('Hi Lovely Gift Center! I need help with a custom hamper.');

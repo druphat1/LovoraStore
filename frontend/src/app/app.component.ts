@@ -6,17 +6,20 @@ import { BottomNavComponent } from './layout/bottom-nav.component';
 import { FooterComponent } from './layout/footer.component';
 import { HeaderComponent } from './layout/header.component';
 import { MobileDrawerComponent } from './layout/mobile-drawer.component';
+import { ScrollButtonsComponent } from './layout/scroll-buttons.component';
 import { QuickViewComponent } from './shared/product/quick-view.component';
 import { ToastOutletComponent } from './shared/ui/toast-outlet.component';
 
 interface ShellData {
   mobileTitle?: string;
   hideBottomNav?: boolean;
+  /** Page has its own mobile bottom bar above the tab bar; lift floating buttons above it. */
+  raiseFloating?: boolean;
 }
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, MobileDrawerComponent, BottomNavComponent, QuickViewComponent, ToastOutletComponent],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, MobileDrawerComponent, BottomNavComponent, QuickViewComponent, ToastOutletComponent, ScrollButtonsComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[80] btn-primary px-4 py-2">Skip to content</a>
@@ -29,6 +32,7 @@ interface ShellData {
     @if (!shell().hideBottomNav) {
       <app-bottom-nav />
     }
+    <app-scroll-buttons [raised]="!!shell().raiseFloating" />
     <app-quick-view />
     <app-toast-outlet />
   `,
