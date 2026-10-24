@@ -1,0 +1,21 @@
+# Netlify deploy config for the Angular storefront in /frontend.
+# Settings here override the Build settings in the Netlify UI.
+
+[build]
+  # The app (package.json, angular.json) lives in /frontend, not the repo root.
+  base = "frontend"
+  command = "npm run build"
+  # Angular's application builder outputs the static site here (relative to base).
+  publish = "dist/lovely-gift-center/browser"
+
+[build.environment]
+  # Angular 19 needs Node 18.19+; pin a current LTS.
+  NODE_VERSION = "22"
+  NG_CLI_ANALYTICS = "false"
+
+# Single-page app: let Angular's router handle deep links like /product/jumbo-pink-teddy
+# instead of Netlify returning 404 on refresh.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
