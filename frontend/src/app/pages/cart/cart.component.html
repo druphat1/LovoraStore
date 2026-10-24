@@ -1,0 +1,225 @@
+<div class="max-w-6xl mx-auto px-margin-mobile md:px-gutter pt-space-md md:pt-8 pb-16">
+  <div class="flex items-center justify-between gap-3 mb-4">
+    <div class="flex items-center gap-2">
+      <h1 class="font-headline-md text-headline-md md:font-headline-lg md:text-headline-lg">Shopping Bag</h1>
+      <span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-secondary text-xs font-bold">{{ cart.count() }} item{{ cart.count() === 1 ? '' : 's' }}</span>
+    </div>
+    <a routerLink="/shop" class="text-sm font-semibold text-primary hidden sm:flex items-center gap-1"><app-icon name="arrow_back" [size]="16" />Continue shopping</a>
+  </div>
+
+  @if (!cart.items().length) {
+    <app-empty-state icon="shopping_bag" title="Your bag is waiting for some joy" message="Add a cuddly teddy, a stunt car or build a custom hamper — gift wrapping is on us." actionLabel="Start shopping" actionLink="/shop" />
+    @if (cart.savedItems().length) {
+      <ng-container [ngTemplateOutlet]="savedList" />
+    }
+  } @else {
+    <!-- Free delivery meter -->
+    <div class="card p-4 mb-5">
+      @if (totals().toFreeDelivery > 0 && delivery() === 'standard') {
+        <p class="text-sm flex items-center gap-2"><app-icon name="local_shipping" [size]="18" class="text-secondary" />Add <b class="text-primary">{{ totals().toFreeDelivery | inr }}</b> more for <b>FREE Delivery!</b></p>
+      } @else {
+        <p class="text-sm flex items-center gap-2 text-emerald-700"><app-icon name="celebration" [size]="18" />You've unlocked FREE delivery &amp; gift wrapping!</p>
+      }
+      <div class="h-2 rounded-full bg-surface-container mt-2 overflow-hidden"><div class="h-full bg-gradient-to-r from-secondary to-primary transition-all" [style.width.%]="freeProgress()"></div></div>
+    </div>
+
+    <div class="grid lg:grid-cols-12 gap-6 items-start">
+      <div class="lg:col-span-7 min-w-0 flex flex-col gap-5">
+        <!-- Items -->
+        <section class="flex flex-col gap-3" aria-label="Items in your bag">
+          @for (l of cart.items(); track l.key) {
+            <article class="card p-3 md:p-4 flex gap-3 md:gap-4">
+              <a [routerLink]="l.link" class="relative w-24 h-24 md:w-28 md:h-28 rounded-2xl overflow-hidden shrink-0 bg-primary-fixed/20">
+                <img [src]="l.image" [alt]="l.name" class="w-full h-full object-cover" />
+                @if (l.unitMrp > l.unitPrice) {
+                  <span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-full bg-primary text-on-primary text-[10px] font-bold">{{ ((l.unitMrp - l.unitPrice) / l.unitMrp * 100).toFixed(0) }}% OFF</span>
+                }
+              </a>
+              <div class="flex-1 min-w-0 flex flex-col">
+                <div class="flex items-start justify-between gap-2">
+                  <a [routerLink]="l.link" class="font-headline-sm text-sm md:text-base font-semibold line-clamp-2 hover:text-primary">{{ l.name }}</a>
+                  <button type="button" (click)="cart.remove(l.key)" class="text-on-surface-variant hover:text-error shrink-0" [attr.aria-label]="'Remove ' + l.name"><app-icon name="delete" [size]="20" /></button>
+                </div>
+                <div class="flex items-baseline gap-2 mt-0.5">
+                  <span class="font-label-price font-bold text-primary">{{ l.unitPrice | inr }}</span>
+                  @if (l.unitMrp > l.unitPrice) { <span class="text-xs text-[#8D8BA7] line-through">{{ l.unitMrp | inr }}</span> }
+                </div>
+                @if (l.kind === 'hamper' && l.hamper; as h) {
+                  <p class="text-[11px] text-on-surface-variant mt-1 line-clamp-2">{{ h.goodies.length }} goodies: {{ goodieNames(h) }} · {{ h.ribbon }} ribbon</p>
+                } @else {
+                  <p class="mt-1.5 inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-primary-fixed/30 text-[11px] text-primary font-semibold self-start">
+                    <app-icon name="redeem" [size]="14" />{{ l.options?.wrap === 'luxury' ? 'Luxury Keepsake Box (+₹49)' : 'Complimentary Festive Gift Wrap' }}{{ l.options?.occasion ? ' · ' + l.options?.occasion : '' }}
+                  </p>
+                }
+                @if (l.options?.note || l.hamper?.card?.message) {
+                  <p class="text-[11px] text-on-surface-variant italic mt-1 line-clamp-1">Msg: “{{ l.options?.note || l.hamper?.card?.message }}”</p>
+                }
+                <div class="flex items-center justify-between mt-auto pt-2">
+                  <button type="button" (click)="cart.saveForLater(l.key)" class="text-xs text-secondary font-semibold flex items-center gap-1"><app-icon name="bookmark" [size]="16" />Save for Later</button>
+                  <app-qty-stepper [value]="l.qty" (valueChange)="cart.updateQty(l.key, $event)" [min]="0" [max]="l.kind === 'hamper' ? 5 : 20" size="sm" [label]="'Quantity of ' + l.name" />
+                </div>
+              </div>
+            </article>
+          }
+        </section>
+
+        <!-- Delivery details -->
+        <section id="delivery" class="card p-4 md:p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="font-headline-sm text-headline-sm flex items-center gap-2"><app-icon name="local_shipping" class="text-primary" />Delivery Details</h2>
+            <span class="px-2.5 py-0.5 rounded-full bg-primary-fixed text-primary text-xs font-bold">Step 2 of 2</span>
+          </div>
+          <form class="grid grid-cols-2 gap-3" (submit)="$event.preventDefault(); placeOrder()" novalidate>
+            <label class="col-span-2">
+              <span class="label">Full Name *</span>
+              <input class="field" name="name" autocomplete="name" [(ngModel)]="addr.name" [class.field-error]="errors().name" [attr.aria-invalid]="!!errors().name" />
+              @if (errors().name) { <span class="text-error text-xs" role="alert">{{ errors().name }}</span> }
+            </label>
+            <label [class]="delivery() === 'standard' ? 'col-span-2 sm:col-span-1' : 'col-span-2'">
+              <span class="label">Mobile Number *</span>
+              <span class="flex items-center gap-2"><span class="field w-auto px-3">+91</span><input class="field" name="phone" inputmode="tel" autocomplete="tel-national" placeholder="98XXX XXXXX" [(ngModel)]="addr.phone" [class.field-error]="errors().phone" [attr.aria-invalid]="!!errors().phone" /></span>
+              @if (errors().phone) { <span class="text-error text-xs" role="alert">{{ errors().phone }}</span> }
+            </label>
+            @if (delivery() === 'standard') {
+              <label class="col-span-2 sm:col-span-1">
+                <span class="label">Pincode *</span>
+                <input class="field" name="pincode" inputmode="numeric" maxlength="6" autocomplete="postal-code" placeholder="145001" [(ngModel)]="addr.pincode" [class.field-error]="errors().pincode" [attr.aria-invalid]="!!errors().pincode" />
+                @if (errors().pincode) { <span class="text-error text-xs" role="alert">{{ errors().pincode }}</span> }
+              </label>
+              <label class="col-span-2">
+                <span class="label">Complete Address *</span>
+                <input class="field" name="address" autocomplete="street-address" placeholder="House / flat, street, area, city" [(ngModel)]="addr.address" [class.field-error]="errors().address" [attr.aria-invalid]="!!errors().address" />
+                @if (errors().address) { <span class="text-error text-xs" role="alert">{{ errors().address }}</span> }
+              </label>
+              <label class="col-span-2">
+                <span class="label">Landmark (optional)</span>
+                <input class="field" name="landmark" placeholder="Near City Plaza Mall" [(ngModel)]="addr.landmark" />
+              </label>
+            }
+          </form>
+          <p class="label mt-5">Delivery preference</p>
+          <div class="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Delivery preference">
+            @for (d of [{ id: 'standard', icon: 'local_shipping', t: 'Standard Delivery', s: 'Tracked · 1-6 days' }, { id: 'pickup', icon: 'storefront', t: 'Store Pickup', s: 'Super Bazar, Pathankot' }]; track d.id) {
+              <button type="button" role="radio" [attr.aria-checked]="delivery() === d.id" (click)="delivery.set($any(d.id))" class="text-left rounded-2xl p-3 border-2 transition-all flex items-start gap-2" [class]="delivery() === d.id ? 'border-primary bg-primary-fixed/20' : 'border-transparent bg-surface-container-low'">
+                <app-icon [name]="d.icon" class="text-primary" />
+                <span class="flex-1"><span class="block text-sm font-semibold">{{ d.t }}</span><span class="block text-[11px] text-on-surface-variant">{{ d.s }}</span></span>
+                <span class="w-4 h-4 rounded-full border-2 mt-0.5" [class]="delivery() === d.id ? 'border-primary bg-primary shadow-[inset_0_0_0_2px_white]' : 'border-outline'"></span>
+              </button>
+            }
+          </div>
+        </section>
+
+        <!-- Payment -->
+        <section class="card p-4 md:p-6">
+          <h2 class="font-headline-sm text-headline-sm flex items-center gap-2 mb-4"><app-icon name="account_balance_wallet" class="text-primary" />Payment Method</h2>
+          <div class="flex flex-col gap-3" role="radiogroup" aria-label="Payment method">
+            <label class="rounded-2xl p-3 border-2 cursor-pointer transition-all" [class]="payment() === 'online' ? 'border-primary bg-primary-fixed/20' : 'border-transparent bg-surface-container-low'">
+              <span class="flex items-start gap-3">
+                <input type="radio" class="check mt-1" name="pay" [checked]="payment() === 'online'" (change)="payment.set('online')" />
+                <span class="flex-1">
+                  <span class="flex items-center justify-between text-sm font-semibold">Online Payment (Demo) <span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-secondary text-[10px] font-bold">Fastest</span></span>
+                  <span class="block text-xs text-on-surface-variant">UPI, GPay, PhonePe, Cards, NetBanking — simulated in this demo</span>
+                  <span class="flex gap-1.5 mt-2">@for (m of ['UPI', 'GPay', 'PhonePe', 'Cards']; track m) { <span class="px-2 py-0.5 rounded bg-surface-container-lowest text-[10px] font-semibold">{{ m }}</span> }</span>
+                </span>
+              </span>
+            </label>
+            <label class="rounded-2xl p-3 border-2 cursor-pointer transition-all" [class]="payment() === 'cod' ? 'border-primary bg-primary-fixed/20' : 'border-transparent bg-surface-container-low'">
+              <span class="flex items-start gap-3">
+                <input type="radio" class="check mt-1" name="pay" [checked]="payment() === 'cod'" (change)="payment.set('cod')" />
+                <span><span class="block text-sm font-semibold">Cash on Delivery / Pay at Shop</span><span class="block text-xs text-on-surface-variant">Pay via cash or UPI scan when the parcel is handed over</span></span>
+              </span>
+            </label>
+            <label class="rounded-2xl p-3 border-2 cursor-pointer transition-all" [class]="payment() === 'whatsapp' ? 'border-emerald-600 bg-emerald-50' : 'border-transparent bg-emerald-50/60'">
+              <span class="flex items-start gap-3">
+                <input type="radio" class="check mt-1" name="pay" [checked]="payment() === 'whatsapp'" (change)="payment.set('whatsapp')" />
+                <span><span class="block text-sm font-semibold text-emerald-800">Order Directly via WhatsApp 💬</span><span class="block text-xs text-on-surface-variant">Opens WhatsApp with your order details prefilled for the store to confirm</span></span>
+              </span>
+            </label>
+          </div>
+          <p class="mt-4 rounded-2xl bg-secondary-fixed/40 p-3 text-xs text-on-surface-variant flex gap-2">
+            <app-icon name="info" [size]="18" class="text-secondary" />
+            <span><b class="text-secondary">Demo mode:</b> no payment gateway is connected, so no money is charged. Orders are saved only in this browser so you can try the full journey.</span>
+          </p>
+        </section>
+      </div>
+
+      <!-- Summary column -->
+      <aside class="lg:col-span-5 lg:sticky lg:top-40 flex flex-col gap-5" aria-label="Order summary">
+        <section class="card p-4 md:p-5">
+          <h2 class="font-headline-sm text-base font-semibold flex items-center gap-2 mb-3"><app-icon name="sell" [size]="20" class="text-primary" />Apply Offers &amp; Coupons</h2>
+          <form class="flex gap-2" (submit)="$event.preventDefault(); applyCode()">
+            <label class="sr-only" for="coupon">Coupon code</label>
+            <input id="coupon" class="field uppercase py-2.5" [ngModel]="couponInput()" (ngModelChange)="couponInput.set($event)" name="coupon" placeholder="Enter coupon code" [disabled]="!!cart.couponCode()" />
+            <button type="submit" class="px-5 rounded-full font-button-text text-sm transition-all" [class]="cart.couponCode() ? 'bg-secondary-container text-on-secondary' : 'bg-secondary text-on-secondary hover:bg-secondary-container'" [disabled]="!!cart.couponCode()">{{ cart.couponCode() ? 'Applied' : 'Apply' }}</button>
+          </form>
+          @if (cart.couponCode() && totals().coupon?.ok) {
+            <p class="mt-2 rounded-xl bg-primary-fixed/30 p-2 text-xs flex items-center justify-between gap-2">
+              <span class="flex items-center gap-1 text-primary font-semibold"><app-icon name="check_circle" [size]="16" />{{ totals().coupon?.message }}</span>
+              <button type="button" (click)="removeCoupon()" class="text-error font-bold">Remove</button>
+            </p>
+          } @else if (couponMsg() && !couponMsg()!.ok) {
+            <p class="mt-2 text-xs text-error" role="alert">{{ couponMsg()!.text }}</p>
+          } @else if (cart.couponCode() && totals().coupon && !totals().coupon!.ok) {
+            <p class="mt-2 text-xs text-error" role="alert">{{ totals().coupon!.message }} <button type="button" (click)="removeCoupon()" class="underline">Remove</button></p>
+          }
+          <p class="flex items-center flex-wrap gap-1.5 mt-3 text-xs text-on-surface-variant">Try:
+            @for (s of suggestions; track s) {
+              <button type="button" (click)="removeCoupon(); applyCode(s)" class="px-2 py-0.5 rounded-full bg-primary-fixed/50 text-primary font-bold">{{ s }}</button>
+            }
+          </p>
+        </section>
+
+        <section class="card p-4 md:p-5">
+          <h2 class="font-headline-sm text-headline-sm mb-3 flex items-center justify-between">Order Summary <app-icon name="receipt_long" class="text-on-surface-variant" /></h2>
+          <dl class="text-sm flex flex-col gap-2">
+            <div class="flex justify-between"><dt class="text-on-surface-variant">Item total (MRP)</dt><dd>{{ totals().mrpTotal | inr }}</dd></div>
+            @if (totals().productDiscount) { <div class="flex justify-between"><dt class="text-on-surface-variant">Product discount</dt><dd class="text-primary">−{{ totals().productDiscount | inr }}</dd></div> }
+            @if (totals().couponDiscount) { <div class="flex justify-between"><dt class="text-on-surface-variant">Coupon ({{ cart.couponCode() }})</dt><dd class="text-primary">−{{ totals().couponDiscount | inr }}</dd></div> }
+            <div class="flex justify-between"><dt class="text-on-surface-variant">Festive gift wrapping 🎁</dt><dd class="text-emerald-700 font-semibold">FREE</dd></div>
+            <div class="flex justify-between"><dt class="text-on-surface-variant">Delivery charges</dt><dd [class.text-emerald-700]="!totals().delivery">{{ totals().delivery ? (totals().delivery | inr) : 'FREE' }}</dd></div>
+          </dl>
+          <div class="mt-3 -mx-4 md:-mx-5 px-4 md:px-5 py-3 bg-primary-fixed/20 flex items-end justify-between">
+            <div><p class="font-headline-sm text-base font-bold">Grand Total</p>@if (totals().savings) {<p class="text-xs text-primary font-semibold">You save {{ totals().savings | inr }} today! 🥳</p>}</div>
+            <span class="font-label-price text-2xl font-bold">{{ totals().grandTotal | inr }}</span>
+          </div>
+          <button type="button" (click)="placeOrder()" [disabled]="placing()" class="btn-primary w-full py-4 mt-4">
+            @if (placing()) {
+              <span class="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin"></span>Processing demo payment…
+            } @else {
+              <app-icon name="lock" [size]="18" />Place Order • {{ totals().grandTotal | inr }}
+            }
+          </button>
+          <div class="grid grid-cols-3 gap-2 mt-4 text-center text-[10px] text-on-surface-variant">
+            <span class="flex flex-col items-center gap-1"><app-icon name="verified_user" [size]="18" class="text-primary" />100% secure checkout</span>
+            <span class="flex flex-col items-center gap-1"><app-icon name="volunteer_activism" [size]="18" class="text-primary" />Handcrafted with care</span>
+            <span class="flex flex-col items-center gap-1"><app-icon name="support_agent" [size]="18" class="text-primary" />WhatsApp order support</span>
+          </div>
+        </section>
+      </aside>
+    </div>
+    @if (cart.savedItems().length) {
+      <ng-container [ngTemplateOutlet]="savedList" />
+    }
+  }
+</div>
+
+<ng-template #savedList>
+  <section class="mt-8">
+    <h2 class="font-headline-sm text-headline-sm mb-3">Saved for later ({{ cart.savedItems().length }})</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      @for (l of cart.savedItems(); track l.key) {
+        <article class="card p-3 flex gap-3 items-center">
+          <img [src]="l.image" [alt]="l.name" class="w-16 h-16 rounded-xl object-cover" />
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-semibold line-clamp-1">{{ l.name }}</p>
+            <p class="text-sm font-bold text-primary">{{ l.unitPrice | inr }}</p>
+            <div class="flex gap-3 text-xs mt-1">
+              <button type="button" (click)="cart.moveToCart(l.key)" class="text-secondary font-bold">Move to bag</button>
+              <button type="button" (click)="cart.removeSaved(l.key)" class="text-on-surface-variant">Remove</button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+</ng-template>

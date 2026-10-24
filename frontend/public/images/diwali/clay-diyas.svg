@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Set of hand-painted clay diyas with lit flames">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe4cc"/><stop offset="1" stop-color="#ffd9e4"/></linearGradient>
+    <linearGradient id="clay" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9622b"/><stop offset="1" stop-color="#9a3412"/></linearGradient>
+    <radialGradient id="halo"><stop offset="0" stop-color="#fde68a" stop-opacity=".95"/><stop offset="1" stop-color="#fde68a" stop-opacity="0"/></radialGradient>
+    <linearGradient id="flame" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#f97316"/><stop offset=".6" stop-color="#fbbf24"/><stop offset="1" stop-color="#fff7cc"/></linearGradient>
+    <g id="diya">
+      <circle cx="0" cy="-34" r="42" fill="url(#halo)"/>
+      <path d="M-6 -18 Q0 -58 6 -18 Q0 -10 -6 -18Z" fill="url(#flame)"/>
+      <path d="M-58 -10 Q0 60 58 -10 Q46 -2 0 -2 Q-46 -2 -58 -10Z" fill="url(#clay)"/>
+      <path d="M-58 -10 Q0 4 58 -10" fill="none" stroke="#fbbf24" stroke-width="3"/>
+      <g fill="#fbbf24"><circle cx="-30" cy="12" r="3.5"/><circle cx="-12" cy="18" r="3.5"/><circle cx="8" cy="18" r="3.5"/><circle cx="26" cy="13" r="3.5"/></g>
+      <path d="M-40 4 Q0 22 40 4" fill="none" stroke="#fef3c7" stroke-width="2" stroke-dasharray="4 5"/>
+    </g>
+  </defs>
+  <rect width="400" height="400" rx="32" fill="url(#bg)"/>
+  <ellipse cx="200" cy="330" rx="170" ry="26" fill="#b20a68" opacity=".08"/>
+  <use href="#diya" x="110" y="190"/>
+  <use href="#diya" x="290" y="190"/>
+  <use href="#diya" x="200" y="300"/>  <!-- marigold petals -->
+  <g fill="#f59e0b"><circle cx="60" cy="350" r="9"/><circle cx="345" cy="345" r="8"/><circle cx="320" cy="360" r="6"/><circle cx="80" cy="366" r="6"/></g>
+  <text x="200" y="386" text-anchor="middle" font-family="Quicksand, sans-serif" font-size="18" font-weight="700" fill="#9a3412">Set of 12 · Hand-painted</text>
+</svg>

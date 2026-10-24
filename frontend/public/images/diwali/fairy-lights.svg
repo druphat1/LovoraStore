@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Warm white LED fairy string lights">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="75%"><stop offset="0" stop-color="#3b2a5c"/><stop offset="1" stop-color="#1c192c"/></radialGradient>
+    <radialGradient id="glow"><stop offset="0" stop-color="#fff7cc"/><stop offset=".35" stop-color="#fde68a" stop-opacity=".9"/><stop offset="1" stop-color="#f59e0b" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="400" height="400" rx="32" fill="url(#bg)"/>
+  <g fill="none" stroke="#6b5a3a" stroke-width="2.5">
+    <path d="M10 70 Q105 150 200 80 T390 80"/>
+    <path d="M10 170 Q110 250 200 180 T390 175"/>
+    <path d="M10 270 Q100 345 200 280 T390 275"/>
+  </g>
+  <g>
+    <!-- bulbs follow the three wires -->
+    <g id="b"><circle r="22" fill="url(#glow)"/><circle r="6" fill="#fffbe6"/></g>
+    <use href="#b" x="40" y="92"/><use href="#b" x="85" y="113"/><use href="#b" x="130" y="114"/><use href="#b" x="172" y="96"/><use href="#b" x="215" y="76"/><use href="#b" x="260" y="64"/><use href="#b" x="305" y="70"/><use href="#b" x="350" y="80"/>
+    <use href="#b" x="45" y="195"/><use href="#b" x="90" y="212"/><use href="#b" x="135" y="214"/><use href="#b" x="178" y="196"/><use href="#b" x="222" y="172"/><use href="#b" x="268" y="160"/><use href="#b" x="312" y="164"/><use href="#b" x="356" y="174"/>
+    <use href="#b" x="40" y="294"/><use href="#b" x="85" y="310"/><use href="#b" x="128" y="312"/><use href="#b" x="172" y="296"/><use href="#b" x="218" y="274"/><use href="#b" x="262" y="262"/><use href="#b" x="308" y="266"/><use href="#b" x="352" y="274"/>
+  </g>
+  <rect x="150" y="352" width="100" height="28" rx="14" fill="#ffffff" fill-opacity=".12"/>
+  <text x="200" y="371" text-anchor="middle" font-family="Quicksand, sans-serif" font-size="14" font-weight="700" fill="#fde68a">10 m · 100 LEDs</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Set of three LED candle lanterns">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="55%" r="75%"><stop offset="0" stop-color="#ebe5ff"/><stop offset="1" stop-color="#d2bbff"/></radialGradient>
+    <radialGradient id="light"><stop offset="0" stop-color="#fff7cc"/><stop offset=".5" stop-color="#fde68a" stop-opacity=".8"/><stop offset="1" stop-color="#f59e0b" stop-opacity="0"/></radialGradient>
+    <linearGradient id="frame" x1="0" x2="1"><stop offset="0" stop-color="#d4a017"/><stop offset=".5" stop-color="#fde68a"/><stop offset="1" stop-color="#b7791f"/></linearGradient>
+    <g id="lantern">
+      <circle cx="0" cy="40" r="70" fill="url(#light)"/>
+      <path d="M-14 -40 Q0 -62 14 -40" fill="none" stroke="url(#frame)" stroke-width="5"/>
+      <path d="M-34 -36 L34 -36 L26 -18 L-26 -18Z" fill="url(#frame)"/>
+      <rect x="-32" y="-18" width="64" height="104" rx="6" fill="#fffbeb" fill-opacity=".55" stroke="url(#frame)" stroke-width="5"/>
+      <line x1="0" y1="-18" x2="0" y2="86" stroke="url(#frame)" stroke-width="3" opacity=".7"/>
+      <rect x="-14" y="34" width="28" height="44" rx="5" fill="#fff"/>
+      <path d="M0 10 Q-8 24 0 32 Q8 24 0 10Z" fill="#f59e0b"/>
+      <rect x="-38" y="86" width="76" height="14" rx="4" fill="url(#frame)"/>
+    </g>
+  </defs>
+  <rect width="400" height="400" rx="32" fill="url(#bg)"/>
+  <ellipse cx="200" cy="350" rx="160" ry="18" fill="#712ae2" opacity=".12"/>
+  <g transform="translate(110 230) scale(.85)"><use href="#lantern"/></g>
+  <g transform="translate(290 230) scale(.85)"><use href="#lantern"/></g>
+  <g transform="translate(200 220) scale(1.1)"><use href="#lantern"/></g>
+  <text x="200" y="384" text-anchor="middle" font-family="Quicksand, sans-serif" font-size="18" font-weight="700" fill="#5a00c6">Flameless · Set of 3</text>
+</svg>

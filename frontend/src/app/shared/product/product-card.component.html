@@ -1,0 +1,97 @@
+@let p = product();
+@if (variant() === 'featured') {
+  <article class="group relative flex flex-col h-full rounded-2xl md:rounded-3xl bg-surface-container-lowest p-2.5 md:p-4 shadow-sm md:shadow-md hover:shadow-xl transition-all duration-300">
+    <a [routerLink]="link()" class="relative block w-full h-36 md:h-64 rounded-xl md:rounded-2xl overflow-hidden mb-2 md:mb-4" [class]="tone().soft">
+      <img [src]="image()" [alt]="p.name" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+      @if (soldOut()) {
+        <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded-full bg-inverse-surface/85 text-inverse-on-surface text-[10px] font-bold">Sold out</span>
+      }
+    </a>
+    <span class="absolute top-4 left-4 md:top-7 md:left-7 px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-label-badge font-label-badge font-bold z-10 shadow-sm" [class]="tone().solid">
+      <span class="md:hidden">{{ pct() }}% OFF</span>
+      <span class="hidden md:inline">{{ p.badge || pct() + '% OFF' }}</span>
+    </span>
+    <app-wishlist-button [productId]="p.id" class="absolute top-4 right-4 md:top-7 md:right-7 z-10" />
+    <div class="flex items-center gap-1.5 mb-1 md:mb-1.5 text-xs text-on-surface-variant">
+      <span class="flex items-center text-amber-500 font-bold"><app-icon name="star" [fill]="true" [size]="14" />{{ p.rating.toFixed(1) }}</span>
+      <span class="text-[10px] md:text-xs">({{ p.reviews }}<span class="hidden md:inline"> reviews</span>)</span>
+      @if (p.tag) {
+        <span class="hidden md:inline ml-auto font-semibold text-[11px] px-2 py-0.5 rounded-full bg-surface-container" [class]="tone().text">{{ p.tag }}</span>
+      }
+    </div>
+    <h3 class="font-headline-sm text-sm md:text-base text-on-surface font-bold line-clamp-1 mb-1 md:mb-2">
+      <a [routerLink]="link()" class="hover:text-primary">{{ p.shortName }}</a>
+    </h3>
+    <app-price [price]="p.price" [mrp]="p.mrp" [showPct]="true" pctClass="hidden md:inline" class="mt-auto mb-2 md:mb-4" />
+    <div class="grid grid-cols-5 gap-2">
+      <button
+        type="button"
+        (click)="add()"
+        [disabled]="soldOut()"
+        class="col-span-5 md:col-span-4 py-2 md:py-2.5 rounded-full bg-surface-container-high text-primary md:bg-primary md:text-on-primary hover:bg-primary hover:text-on-primary md:hover:bg-primary-container font-button-text text-xs md:text-sm transition-all md:shadow-md active:scale-95 flex items-center justify-center gap-1 disabled:opacity-50"
+      >
+        <app-icon name="add_shopping_cart" [size]="16" />
+        <span class="md:hidden">{{ soldOut() ? 'Sold out' : 'Add' }}</span>
+        <span class="hidden md:inline">{{ soldOut() ? 'Sold out' : 'Add to Cart' }}</span>
+      </button>
+      <button
+        type="button"
+        (click)="quickView()"
+        class="hidden md:flex col-span-1 rounded-full bg-surface-container hover:bg-surface-variant text-on-surface items-center justify-center transition-colors"
+        title="Quick View"
+        [attr.aria-label]="'Quick view ' + p.shortName"
+      >
+        <app-icon name="visibility" [size]="18" />
+      </button>
+    </div>
+  </article>
+} @else {
+  <article class="group relative flex flex-col h-full rounded-2xl md:rounded-3xl bg-surface-container-lowest p-2 md:p-2.5 shadow-sm hover:shadow-level-2 hover:-translate-y-0.5 transition-all duration-300 border border-primary/[0.05]">
+    <a [routerLink]="link()" class="relative block w-full aspect-square rounded-xl md:rounded-2xl overflow-hidden bg-primary-fixed/20 mb-2 md:mb-3">
+      <img [src]="image()" [alt]="p.name" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+      @if (p.badge) {
+        <span class="absolute bottom-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-secondary/90 md:bg-surface-container-lowest/95 text-on-secondary md:text-secondary text-[10px] md:text-[11px] font-label-badge font-semibold">
+          <app-icon [name]="p.customizable ? 'edit' : 'bolt'" [size]="12" class="hidden md:inline-flex" />{{ p.badge }}
+        </span>
+      }
+      @if (soldOut()) {
+        <span class="absolute inset-0 bg-surface-container-lowest/60 flex items-center justify-center">
+          <span class="px-3 py-1 rounded-full bg-inverse-surface text-inverse-on-surface text-xs font-bold">Out of stock</span>
+        </span>
+      }
+    </a>
+    @if (pct() > 0) {
+      <span class="absolute top-3.5 left-3.5 md:top-4 md:left-4 px-2 py-0.5 rounded-full bg-primary text-on-primary text-[10px] md:text-[11px] font-label-badge font-bold z-10 shadow-sm">SAVE {{ pct() }}%</span>
+    }
+    <app-wishlist-button [productId]="p.id" class="absolute top-3 right-3 md:top-4 md:right-4 z-10" />
+    <div class="flex items-center gap-1.5 md:gap-2 mb-1 text-[11px] md:text-xs text-on-surface-variant px-0.5">
+      <span class="flex items-center gap-0.5 font-semibold text-on-surface"><app-icon name="star" [fill]="true" [size]="14" class="text-amber-500" />{{ p.rating.toFixed(1) }}</span>
+      <span>({{ p.reviews }})</span>
+      <span class="hidden md:inline text-secondary font-semibold">{{ age() }}</span>
+    </div>
+    <h3 class="font-headline-sm text-[13px] md:text-sm leading-snug text-on-surface font-semibold line-clamp-2 min-h-[2.4em] px-0.5">
+      <a [routerLink]="link()" class="hover:text-primary">{{ p.name }}</a>
+    </h3>
+    <p class="md:hidden text-[11px] text-on-surface-variant line-clamp-1 px-0.5 mt-0.5">{{ p.subtitle }}</p>
+    <app-price [price]="p.price" [mrp]="p.mrp" class="mt-auto pt-1.5 pb-2 px-0.5" />
+    @if (p.customizable) {
+      <a [routerLink]="link()" class="w-full py-2 rounded-full bg-secondary-fixed/60 text-secondary font-button-text text-xs md:text-sm flex items-center justify-center gap-1 hover:bg-secondary hover:text-on-secondary transition-all">
+        <app-icon name="auto_fix_high" [size]="16" />Customize
+      </a>
+    } @else {
+      <button
+        type="button"
+        (click)="add()"
+        [disabled]="soldOut()"
+        class="w-full py-2 rounded-full bg-primary text-on-primary hover:bg-primary-container font-button-text text-xs md:text-sm transition-all shadow-sm active:scale-95 flex items-center justify-center gap-1 disabled:opacity-50"
+      >
+        <app-icon [name]="soldOut() ? 'block' : 'shopping_bag'" [size]="16" />
+        @if (soldOut()) {
+          Sold out
+        } @else {
+          <span class="md:hidden">Add</span><span class="hidden md:inline">Add to Cart</span>
+        }
+      </button>
+    }
+  </article>
+}

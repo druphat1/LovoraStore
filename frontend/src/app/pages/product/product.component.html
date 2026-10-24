@@ -1,0 +1,311 @@
+@if (product(); as p) {
+  <div class="max-w-7xl mx-auto md:px-gutter md:pt-6 pb-32 md:pb-16">
+    <div class="hidden md:flex items-center justify-between mb-5">
+      <app-breadcrumbs [items]="crumbs()" />
+      @if (p.sameDay) {
+        <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed/60 text-secondary text-xs font-semibold"><span class="w-2 h-2 rounded-full bg-secondary"></span>Same-day local delivery</span>
+      }
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-5 lg:gap-8">
+      <!-- ===== Gallery ===== -->
+      <div class="flex flex-col gap-4">
+        <!-- Mobile swipe carousel -->
+        <div class="md:hidden relative">
+          <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar" (scroll)="onCarouselScroll($event)">
+            @for (src of p.images; track src; let i = $index) {
+              <img [src]="src" [alt]="p.name + ' — photo ' + (i + 1)" class="w-full shrink-0 snap-center aspect-square object-cover" />
+            }
+          </div>
+          <div class="absolute top-3 left-3 flex gap-1.5">
+            @if (p.badge) {
+              <span class="px-2.5 py-1 rounded-full bg-primary text-on-primary text-[11px] font-bold flex items-center gap-1"><app-icon name="local_fire_department" [size]="14" />{{ p.badge }}</span>
+            }
+            @if (pct()) {
+              <span class="px-2.5 py-1 rounded-full bg-marigold text-on-surface text-[11px] font-bold">{{ pct() }}% OFF</span>
+            }
+          </div>
+          <div class="absolute top-3 right-3 flex gap-2">
+            <button type="button" (click)="share()" class="w-8 h-8 rounded-full bg-surface-container-lowest/90 shadow-sm flex items-center justify-center" aria-label="Share"><app-icon name="share" [size]="18" /></button>
+            <app-wishlist-button [productId]="p.id" />
+          </div>
+          <div class="absolute bottom-3 left-3 flex gap-1.5" aria-hidden="true">
+            @for (src of p.images; track src; let i = $index) {
+              <span class="h-1.5 rounded-full transition-all" [class]="i === active() ? 'w-5 bg-primary' : 'w-1.5 bg-surface-container-lowest/80'"></span>
+            }
+          </div>
+          <span class="absolute bottom-3 right-3 px-2 py-0.5 rounded-full bg-surface-container-lowest/90 text-xs font-semibold">{{ active() + 1 }} / {{ p.images.length }}</span>
+        </div>
+
+        <!-- Desktop main image with hover zoom -->
+        <div class="hidden md:block card p-4">
+          <div class="relative aspect-square rounded-2xl overflow-hidden bg-primary-fixed/20 cursor-zoom-in" (mousemove)="onZoom($event)" (mouseleave)="zoom.set(null)">
+            <img [src]="p.images[active()]" [alt]="p.name" class="w-full h-full object-cover transition-transform duration-200" [style.transform-origin]="zoom() || 'center'" [style.transform]="zoom() ? 'scale(1.8)' : 'none'" />
+            <div class="absolute top-3 left-3 flex flex-col items-start gap-1.5">
+              @if (p.badge) {
+                <span class="px-3 py-1 rounded-full bg-primary text-on-primary text-label-badge font-bold flex items-center gap-1"><app-icon name="local_fire_department" [size]="14" />{{ p.badge }}</span>
+              }
+              @if (pct()) {
+                <span class="px-3 py-1 rounded-full bg-secondary-fixed text-secondary text-label-badge font-bold">{{ pct() }}% OFF</span>
+              }
+            </div>
+            <app-wishlist-button [productId]="p.id" size="lg" class="absolute top-3 right-3" />
+            <span class="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-surface-container-lowest/90 text-xs flex items-center gap-1"><app-icon name="zoom_in" [size]="14" />Roll over to inspect</span>
+          </div>
+          <div class="flex justify-between text-xs text-on-surface-variant mt-3 px-1">
+            <span class="flex items-center gap-1"><app-icon name="straighten" [size]="14" />Photos show the actual gift</span>
+            <span class="text-secondary font-semibold">SKU {{ p.sku }}</span>
+          </div>
+        </div>
+        @if (p.images.length > 1) {
+          <div class="hidden md:grid grid-cols-4 lg:grid-cols-5 gap-3">
+            @for (src of p.images; track src; let i = $index) {
+              <button type="button" (click)="active.set(i)" class="rounded-2xl overflow-hidden bg-surface-container-lowest p-1 transition-all" [class]="i === active() ? 'ring-2 ring-primary' : 'ring-1 ring-surface-container hover:ring-primary/40'" [attr.aria-label]="'Show photo ' + (i + 1)" [attr.aria-pressed]="i === active()">
+                <img [src]="src" alt="" class="w-full aspect-square object-cover rounded-xl" />
+                <span class="block text-[11px] text-center py-1" [class]="i === active() ? 'text-primary font-bold' : 'text-on-surface-variant'">{{ p.imageLabels?.[i] ?? 'View ' + (i + 1) }}</span>
+              </button>
+            }
+          </div>
+        }
+        <div class="hidden md:grid grid-cols-4 gap-3 card p-4 bg-surface-container-low">
+          @for (b of [{ i: 'eco', t: 'Non-Toxic Dyes', s: 'Child-safe materials', c: 'bg-primary-fixed text-primary' }, { i: 'sanitizer', t: 'Sanitized Pack', s: 'Clean dispatch', c: 'bg-secondary-fixed text-secondary' }, { i: 'storefront', t: 'Store Pickup', s: 'Super Bazar, PTK', c: 'bg-tertiary-fixed text-tertiary' }, { i: 'autorenew', t: '7-Day Return', s: 'Easy exchange', c: 'bg-primary-fixed text-primary' }]; track b.t) {
+            <div class="flex flex-col items-center text-center gap-1">
+              <span class="w-10 h-10 rounded-full flex items-center justify-center" [class]="b.c"><app-icon [name]="b.i" [size]="20" /></span>
+              <span class="text-xs font-semibold text-on-surface">{{ b.t }}</span>
+              <span class="text-[10px] text-on-surface-variant">{{ b.s }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- ===== Info & purchase ===== -->
+      <div class="flex flex-col gap-4 px-margin-mobile md:px-0">
+        <section class="md:card md:p-6">
+          <div class="flex items-center justify-between flex-wrap gap-2 text-xs">
+            <span class="flex items-center gap-2">
+              <span class="hidden md:inline px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-badge">SKU: {{ p.sku }}</span>
+              <span class="text-secondary font-semibold uppercase md:normal-case tracking-wide md:tracking-normal">Lovely Toys Original</span>
+            </span>
+            @if (stock() === 0) {
+              <span class="font-bold text-error flex items-center gap-1"><app-icon name="block" [size]="14" />Out of stock</span>
+            } @else if (stock() <= 15) {
+              <span class="font-bold text-primary flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>Hurry, only {{ stock() }} left in stock!</span>
+            }
+          </div>
+          <h1 class="font-headline-sm text-headline-sm md:font-headline-lg md:text-headline-lg text-on-surface mt-2">{{ p.name }}</h1>
+          <div class="flex items-center flex-wrap gap-2 mt-2 text-sm text-on-surface-variant">
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-marigold/15 text-on-surface font-semibold md:bg-transparent md:p-0"><app-stars [value]="p.rating" class="hidden md:inline-flex" /><app-icon name="star" [fill]="true" [size]="14" class="md:hidden text-marigold" />{{ p.rating }}</span>
+            <a href="#reviews" class="text-secondary hover:underline">{{ p.reviews }} verified ratings</a>
+          </div>
+
+          <div class="mt-4 rounded-2xl bg-surface-container-low md:bg-surface-container-low p-4">
+            <div class="flex items-baseline flex-wrap gap-2">
+              <span class="font-label-price text-[2rem] leading-none font-bold text-primary">{{ unitPrice() | inr }}</span>
+              @if (pct()) {
+                <span class="text-base text-[#8D8BA7] line-through">{{ p.mrp + (wrap() === 'luxury' ? luxuryFee : 0) | inr }}</span>
+                <span class="px-2 py-0.5 rounded-full bg-primary-fixed text-primary text-xs font-bold">Save {{ p.mrp - p.price | inr }} ({{ pct() }}% OFF)</span>
+              }
+            </div>
+            <p class="text-xs text-on-surface-variant mt-2 flex items-center gap-1"><app-icon name="verified" [size]="14" class="text-tertiary" />Inclusive of all taxes &amp; GST · complimentary gift wrap</p>
+          </div>
+
+          <form (submit)="checkPin($event)" class="mt-4 rounded-2xl bg-secondary-fixed/30 md:bg-transparent p-4 md:p-0" novalidate>
+            <label for="pin" class="flex items-center justify-between text-sm font-semibold text-on-surface mb-2">
+              <span class="flex items-center gap-1.5"><app-icon name="local_shipping" [size]="18" class="text-primary" />Check Delivery &amp; COD</span>
+            </label>
+            <div class="flex gap-2">
+              <input id="pin" inputmode="numeric" maxlength="6" [ngModel]="pin()" (ngModelChange)="pin.set($event)" name="pin" placeholder="Enter 6-digit Pincode (e.g. 145001)" class="field rounded-full py-2.5" [class.field-error]="pinResult() && !pinResult()!.ok" aria-describedby="pin-msg" />
+              <button type="submit" class="px-5 rounded-full bg-secondary text-on-secondary font-button-text text-sm hover:bg-secondary-container">Check</button>
+            </div>
+            <p id="pin-msg" class="text-xs mt-2 flex items-start gap-1" [class]="pinResult() ? (pinResult()!.ok ? 'text-emerald-700' : 'text-error') : 'text-on-surface-variant'">
+              <app-icon [name]="pinResult() ? (pinResult()!.ok ? 'check_circle' : 'error') : 'bolt'" [size]="14" />
+              {{ pinResult()?.text ?? 'Same-day in Pathankot · Free delivery on orders above ₹499.' }}
+            </p>
+          </form>
+        </section>
+
+        <!-- Custom Gift Studio -->
+        <section class="card p-4 md:p-6">
+          <div class="flex items-start justify-between gap-3 mb-4">
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-full bg-primary-fixed text-primary flex items-center justify-center"><app-icon name="celebration" [size]="20" /></span>
+              <div>
+                <h2 class="font-headline-sm text-headline-sm">Custom Gift Studio</h2>
+                <p class="text-xs text-on-surface-variant">Personalize this surprise for your loved one</p>
+              </div>
+            </div>
+            <span class="hidden md:inline text-xs font-bold text-primary">Step 1 to 3</span>
+          </div>
+
+          <p class="text-sm font-semibold text-on-surface-variant mb-2">1. Choose occasion</p>
+          <div class="flex flex-wrap gap-2 mb-5" role="radiogroup" aria-label="Occasion">
+            @for (o of occasionChoices; track o.id) {
+              <button type="button" role="radio" [attr.aria-checked]="occasion() === o.id" (click)="occasion.set(o.id)" class="px-3 md:px-4 py-1.5 rounded-full text-xs md:text-sm font-semibold transition-all" [class]="occasion() === o.id ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'">{{ o.label }}</button>
+            }
+          </div>
+
+          <p class="text-sm font-semibold text-on-surface-variant mb-2">2. Presentation &amp; unboxing</p>
+          <div class="grid sm:grid-cols-2 gap-3 mb-5">
+            <label class="rounded-2xl p-3 cursor-pointer border-2 transition-all" [class]="wrap() === 'free' ? 'border-primary bg-primary-fixed/20' : 'border-transparent bg-surface-container-low'">
+              <span class="flex items-start gap-2">
+                <input type="radio" class="check mt-0.5" name="wrap" [checked]="wrap() === 'free'" (change)="wrap.set('free')" />
+                <span class="flex-1">
+                  <span class="flex items-center justify-between text-sm font-semibold">Complimentary Wrap <span class="text-[11px] text-emerald-700 bg-emerald-50 px-1.5 rounded">FREE</span></span>
+                  <span class="block text-xs text-on-surface-variant mt-0.5">Pastel tissue layering with satin curly ribbon</span>
+                </span>
+              </span>
+            </label>
+            <label class="rounded-2xl p-3 cursor-pointer border-2 transition-all" [class]="wrap() === 'luxury' ? 'border-primary bg-primary-fixed/20' : 'border-transparent bg-surface-container-low'">
+              <span class="flex items-start gap-2">
+                <input type="radio" class="check mt-0.5" name="wrap" [checked]="wrap() === 'luxury'" (change)="wrap.set('luxury')" />
+                <span class="flex-1">
+                  <span class="flex items-center justify-between text-sm font-semibold">Luxury Keepsake Box <span class="text-[11px] text-secondary font-bold">+{{ luxuryFee | inr }}</span></span>
+                  <span class="block text-xs text-on-surface-variant mt-0.5">Rigid magnetic box, velvet ribbon &amp; glitter sprinkle</span>
+                </span>
+              </span>
+            </label>
+          </div>
+
+          <label for="note" class="flex items-center justify-between text-sm font-semibold text-on-surface-variant mb-2">
+            3. Handwritten greeting card note <span class="text-xs font-normal">{{ note().length }}/150</span>
+          </label>
+          <textarea id="note" rows="3" maxlength="150" [ngModel]="note()" (ngModelChange)="note.set($event)" name="note" class="field resize-none" placeholder="Write your heartfelt note here… our team writes it with calligraphy pens on a gold-embossed card"></textarea>
+          <div class="flex flex-wrap items-center gap-1.5 mt-2">
+            <span class="text-xs text-on-surface-variant">Ideas:</span>
+            @for (idea of noteIdeas; track idea) {
+              <button type="button" (click)="note.set(idea)" class="px-2.5 py-1 rounded-full bg-surface-container text-[11px] text-on-surface-variant hover:bg-primary-fixed hover:text-primary">"{{ idea }}"</button>
+            }
+          </div>
+        </section>
+
+        <!-- Desktop purchase row -->
+        <section class="hidden md:flex card p-4 flex-col gap-3">
+          <div class="flex items-center gap-3">
+            <app-qty-stepper [value]="qty()" (valueChange)="qty.set($event)" [max]="stock() || 1" />
+            <button type="button" (click)="addToCart()" [disabled]="stock() === 0" class="btn-primary flex-1 py-3.5">
+              <app-icon name="shopping_bag" [size]="20" />{{ stock() === 0 ? 'Out of stock' : 'Add to Cart • ' + (unitPrice() * qty() | inr) }}
+            </button>
+          </div>
+          <button type="button" (click)="buyOnWhatsApp()" class="btn-whatsapp py-3.5"><app-icon name="chat" [size]="20" />Buy Instantly via WhatsApp Support</button>
+        </section>
+
+        <!-- Add-ons -->
+        <section class="card p-4 md:p-5 bg-surface-container-low md:bg-surface-container-lowest">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="font-headline-sm text-base md:text-sm font-semibold flex items-center gap-1.5"><app-icon name="add_circle" [size]="18" class="text-primary hidden md:inline-flex" />Make It Extra Special</h2>
+            <span class="text-xs text-primary md:text-on-surface-variant font-semibold">Pairs wonderfully</span>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-3">
+            @for (a of addons; track a.id) {
+              <div class="flex items-center gap-3 p-2 rounded-2xl bg-surface-container-lowest md:bg-surface-container-low">
+                <img [src]="a.images[0]" [alt]="a.name" class="w-14 h-14 rounded-xl object-cover" />
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold line-clamp-1">{{ a.name }}</p>
+                  <p class="text-xs text-secondary font-bold">+{{ a.price | inr }}</p>
+                </div>
+                <button type="button" (click)="addAddon(a.id)" class="px-3 py-1.5 rounded-full bg-secondary-fixed/60 text-secondary text-xs font-bold hover:bg-secondary hover:text-on-secondary flex items-center gap-0.5"><app-icon name="add" [size]="14" />Add</button>
+              </div>
+            }
+          </div>
+        </section>
+
+        <!-- Specs & policies -->
+        <section class="flex flex-col gap-2">
+          <app-accordion title="Specifications & Dimensions" icon="straighten" [defaultOpen]="true">
+            <dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-xs md:text-sm">
+              @for (s of p.specs; track s[0]) {
+                <dt class="text-on-surface-variant">{{ s[0] }}:</dt>
+                <dd class="text-on-surface">{{ s[1] }}</dd>
+              }
+            </dl>
+            <p class="mt-3">{{ p.description }}</p>
+          </app-accordion>
+          <app-accordion title="Wash & Care Guidance" icon="local_laundry_service">
+            Spot clean with a damp cloth and mild soap. Air-dry away from direct sunlight. Keep away from open flames. Electronic items: do not immerse in water.
+          </app-accordion>
+          <app-accordion title="7-Day Replacement & Return Policy" icon="verified_user">
+            Received a damaged or defective item? Message us a photo on WhatsApp within 7 days for a free replacement or store exchange.
+            <a routerLink="/help" fragment="returns" class="text-primary font-semibold">Read the full policy</a>.
+          </app-accordion>
+        </section>
+      </div>
+    </div>
+
+    <!-- Reviews -->
+    <section id="reviews" class="mx-margin-mobile md:mx-0 mt-8 card p-5 md:p-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+        <div>
+          <span class="eyebrow text-primary">Unfiltered joy stories</span>
+          <h2 class="font-headline-md text-headline-md text-on-surface">Customer Impressions</h2>
+          <p class="text-sm text-on-surface-variant">Sample reviews plus any you write in this browser</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 px-4 py-2 rounded-2xl bg-secondary-fixed/40">
+            <span class="font-label-price text-2xl font-bold text-secondary">{{ p.rating }}</span>
+            <span class="flex flex-col text-xs text-on-surface-variant"><app-stars [value]="p.rating" [size]="14" />{{ p.reviews }} verified purchases</span>
+          </div>
+          <button type="button" (click)="reviewOpen.set(true)" class="px-4 py-2 rounded-full bg-secondary text-on-secondary font-button-text text-sm">Write a Review</button>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+        @for (r of reviews(); track $index) {
+          <figure class="rounded-2xl bg-surface-container-low p-4 flex flex-col gap-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-headline-sm text-sm font-bold text-on-surface">{{ r.name }}</span>
+              <span class="text-on-surface-variant">{{ r.city }} • {{ r.when }}</span>
+            </div>
+            <app-stars [value]="r.rating" [size]="14" />
+            <blockquote class="text-sm text-on-surface-variant">“{{ r.text }}”</blockquote>
+            <figcaption class="text-[11px] text-secondary flex items-center gap-1 mt-auto"><app-icon name="verified" [size]="14" />Gift buyer</figcaption>
+          </figure>
+        }
+      </div>
+    </section>
+
+    @if (related().length) {
+      <section class="px-margin-mobile md:px-0 mt-10">
+        <h2 class="font-headline-sm text-headline-sm md:font-headline-md md:text-headline-md mb-4">You may also love</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          @for (r of related(); track r.id) {
+            <app-product-card [product]="r" />
+          }
+        </div>
+      </section>
+    }
+  </div>
+
+  <!-- Mobile sticky purchase bar -->
+  <div class="md:hidden fixed bottom-0 inset-x-0 z-40 bg-surface/95 backdrop-blur-xl shadow-[0_-4px_16px_rgba(124,58,237,0.1)] px-margin-mobile py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex items-center gap-2">
+    <app-qty-stepper [value]="qty()" (valueChange)="qty.set($event)" [max]="stock() || 1" size="sm" />
+    <button type="button" (click)="addToCart()" [disabled]="stock() === 0" class="btn-primary flex-1 py-3"><app-icon name="shopping_bag" [size]="18" />{{ stock() === 0 ? 'Out of stock' : 'Add to Cart' }}</button>
+    <button type="button" (click)="buyOnWhatsApp()" class="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-md" aria-label="Order on WhatsApp"><app-icon name="chat" /></button>
+  </div>
+
+  <app-modal [open]="reviewOpen()" (closed)="reviewOpen.set(false)" title="Write a Review" variant="sheet" maxWidth="max-w-lg">
+    <form (submit)="submitReview($event)" class="flex flex-col gap-4" novalidate>
+      <div>
+        <span class="label">Your rating</span>
+        <div class="flex gap-1" role="radiogroup" aria-label="Rating">
+          @for (s of [1, 2, 3, 4, 5]; track s) {
+            <button type="button" role="radio" [attr.aria-checked]="draft.rating === s" (click)="draft.rating = s" class="text-marigold" [attr.aria-label]="s + ' stars'">
+              <app-icon name="star" [fill]="s <= draft.rating" [size]="32" />
+            </button>
+          }
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <label><span class="label">Name *</span><input class="field" name="rname" [(ngModel)]="draft.name" /></label>
+        <label><span class="label">City</span><input class="field" name="rcity" [(ngModel)]="draft.city" /></label>
+      </div>
+      <label><span class="label">Your review *</span><textarea rows="4" class="field resize-none" name="rtext" [(ngModel)]="draft.text" placeholder="How did your loved one react?"></textarea></label>
+      @if (reviewError()) {
+        <p class="text-error text-sm" role="alert">{{ reviewError() }}</p>
+      }
+      <button type="submit" class="btn-primary py-3">Submit Review</button>
+    </form>
+  </app-modal>
+} @else {
+  <div class="max-w-3xl mx-auto px-margin-mobile py-16">
+    <app-empty-state icon="search_off" title="We couldn't find that gift" message="It may have sold out or the link is incorrect." actionLabel="Browse all gifts" actionLink="/shop" />
+  </div>
+}

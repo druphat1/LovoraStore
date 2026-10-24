@@ -1,0 +1,107 @@
+<!-- Desktop / tablet footer -->
+<footer class="hidden md:block w-full bg-surface-container-low text-on-surface pt-space-xl pb-space-lg shadow-[0_-4px_24px_-4px_rgba(113,42,226,0.06)]">
+  <div class="max-w-7xl mx-auto px-gutter">
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-space-xl mb-space-xl">
+      <div>
+        <div class="flex items-center gap-space-sm mb-space-md">
+          <span class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary"><app-icon name="featured_seasonal_and_gifts" [size]="20" /></span>
+          <span class="font-headline-sm text-headline-sm text-primary font-bold">{{ store.name }}</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md leading-relaxed">
+          Bringing joyous celebrations, warm smiles, and wholesome childhood wonder since {{ store.since }}. Handcrafted hampers, authentic plushies, and certified non-toxic toys.
+        </p>
+        <div class="flex flex-col gap-space-xs p-space-sm rounded-xl bg-surface-container mb-space-md">
+          <span class="flex items-center gap-space-xs font-label-badge text-label-badge text-secondary font-bold"><app-icon name="verified" [size]="16" /> 100% Non-Toxic &amp; Child Safe</span>
+          <span class="flex items-center gap-space-xs font-label-badge text-label-badge text-primary font-bold"><app-icon name="sentiment_satisfied" [size]="16" /> Complimentary Handcrafted Wrap</span>
+        </div>
+        <div class="flex items-center gap-space-sm">
+          <a [href]="wa" target="_blank" rel="noopener" aria-label="WhatsApp" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"><app-icon name="chat" [size]="18" /></a>
+          <a [href]="store.phoneHref" aria-label="Call the store" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"><app-icon name="call" [size]="18" /></a>
+          <a [href]="'mailto:' + store.email" aria-label="Email" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"><app-icon name="mail" [size]="18" /></a>
+          <a routerLink="/about" aria-label="Visit the store" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"><app-icon name="storefront" [size]="18" /></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-md font-bold">Shop Categories</h4>
+        <ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+          @for (l of shopLinks; track l.label) {
+            <li><a routerLink="/shop" [queryParams]="l.query" class="hover:text-primary transition-colors">{{ l.label }}</a></li>
+          }
+          <li><a routerLink="/hamper-studio" class="hover:text-primary transition-colors">DIY Hamper Custom Studio</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-md font-bold">Customer Care</h4>
+        <ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+          @for (l of careLinks; track l.label) {
+            <li><a [routerLink]="l.link" [fragment]="l.fragment" class="hover:text-primary transition-colors">{{ l.label }}</a></li>
+          }
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-md font-bold">Flagship Showroom</h4>
+        <div class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+          <span class="flex items-start gap-space-xs"><app-icon name="location_on" [size]="18" class="text-primary mt-0.5" />{{ address }}</span>
+          <a [href]="store.phoneHref" class="flex items-center gap-space-xs hover:text-primary"><app-icon name="call" [size]="18" class="text-primary" />{{ store.phoneDisplay }}</a>
+          <a [href]="wa" target="_blank" rel="noopener" class="flex items-center gap-space-xs hover:text-primary"><app-icon name="chat" [size]="18" class="text-secondary" />Instant WhatsApp: {{ store.phoneDisplay }}</a>
+        </div>
+        <form (submit)="join($event)" class="bg-surface-container-lowest p-space-md rounded-2xl shadow-[0_2px_12px_rgba(113,42,226,0.06)]" novalidate>
+          <span class="font-headline-sm text-sm text-on-surface font-semibold block mb-space-xs">Festive Discount Club</span>
+          <p class="text-xs text-on-surface-variant mb-space-sm">Get ₹250 off on your first festive hamper order.</p>
+          <div class="flex items-center gap-space-xs">
+            <label class="sr-only" for="footer-email">Email address</label>
+            <input id="footer-email" type="email" name="email" [ngModel]="email()" (ngModelChange)="email.set($event)" placeholder="Your email address"
+              class="w-full bg-surface-container-low px-3 py-1.5 rounded-full text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" [class.ring-1]="emailError()" [class.ring-error]="emailError()" />
+            <button type="submit" class="px-space-md py-1.5 bg-primary text-on-primary font-button-text rounded-full hover:bg-primary-container text-xs transition-colors shrink-0">Join</button>
+          </div>
+          @if (emailError()) {
+            <p class="text-error text-xs mt-1" role="alert">{{ emailError() }}</p>
+          }
+        </form>
+      </div>
+    </div>
+    <div class="pt-space-lg border-t border-outline-variant/30 flex flex-col lg:flex-row items-center justify-between gap-space-md">
+      <div class="flex flex-col sm:flex-row items-center gap-space-sm font-body-sm text-body-sm text-on-surface-variant text-center">
+        <p>© {{ year }} {{ store.name }} ({{ store.legalName }}). GSTIN {{ store.gstin }}</p>
+        <span class="text-xs bg-surface-container px-space-xs py-0.5 rounded-full">Demo Storefront — no real payments</span>
+      </div>
+      <div class="flex items-center gap-space-sm flex-wrap justify-center">
+        <span class="font-label-badge text-label-badge text-on-surface-variant uppercase tracking-wider mr-space-xs">Accepted at checkout:</span>
+        @for (m of ['UPI', 'RuPay', 'VISA', 'Mastercard', 'NetBanking']; track m) {
+          <span class="px-space-xs py-1 rounded bg-surface-container-lowest text-on-surface font-label-badge text-label-badge">{{ m }}</span>
+        }
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Mobile footer (from the mobile homepage reference) -->
+<footer class="md:hidden bg-surface-container-high px-margin-mobile pt-space-lg pb-28 rounded-t-[2.5rem] mt-2 flex flex-col gap-space-md">
+  <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-4 rounded-2xl shadow-md flex items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <span class="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center shrink-0"><app-icon name="chat" /></span>
+      <div>
+        <h4 class="font-button-text leading-tight">Need Custom Hampers?</h4>
+        <p class="text-[11px] text-emerald-100">Live support &amp; quick photo previews</p>
+      </div>
+    </div>
+    <a [href]="wa" target="_blank" rel="noopener" class="px-3 py-2 rounded-full bg-white text-emerald-800 font-button-text text-xs whitespace-nowrap shadow active:scale-95">Chat on WhatsApp</a>
+  </div>
+  <div class="bg-surface-container-lowest p-4 rounded-2xl shadow-sm flex flex-col gap-2.5">
+    <div class="flex items-center gap-2 text-primary font-headline-sm text-headline-sm"><app-icon name="storefront" [size]="22" />{{ store.name }}</div>
+    <div class="font-body-sm text-body-sm text-on-surface-variant space-y-1">
+      <p class="flex items-start gap-2"><app-icon name="location_on" [size]="18" class="text-outline mt-0.5" />{{ address }}</p>
+      <a [href]="store.phoneHref" class="flex items-center gap-2"><app-icon name="phone_iphone" [size]="18" class="text-outline" />{{ store.phoneDisplay }}</a>
+      <p class="flex items-center gap-2"><app-icon name="schedule" [size]="18" class="text-outline" />Open Daily: {{ store.hours }}</p>
+    </div>
+  </div>
+  <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-label-badge text-label-badge text-on-surface-variant">
+    <a routerLink="/help" fragment="returns" class="hover:text-primary">Return Policy</a><span>•</span>
+    <a routerLink="/help" fragment="shipping" class="hover:text-primary">Shipping Info</a><span>•</span>
+    <a routerLink="/help" fragment="terms" class="hover:text-primary">Privacy &amp; Terms</a>
+  </div>
+  <div class="text-center text-xs text-outline">
+    <p>© {{ year }} {{ store.name }}. All Rights Reserved.</p>
+    <p class="text-[10px] mt-0.5">Demo storefront — prices &amp; orders are for preview only.</p>
+  </div>
+</footer>

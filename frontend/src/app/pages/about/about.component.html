@@ -1,0 +1,138 @@
+<div class="max-w-7xl mx-auto px-margin-mobile md:px-gutter pt-space-md md:pt-10 pb-16 flex flex-col gap-8 md:gap-12">
+  <!-- Hero -->
+  <section class="grid lg:grid-cols-2 gap-6 lg:gap-10 items-center">
+    <div class="rounded-3xl bg-gradient-to-br from-primary-fixed/70 via-surface-container-low to-secondary-fixed/60 p-5 md:p-8">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest/80 text-primary font-label-badge text-label-badge uppercase tracking-wider"><app-icon name="favorite" [size]="14" />Spreading smiles since {{ store.since }}</span>
+      <h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-display-hero md:text-[3rem] md:leading-[3.5rem] mt-3">Every celebration deserves a little <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">sparkle!</span></h1>
+      <p class="font-body-sm text-body-sm md:font-body-lg md:text-body-lg text-on-surface-variant mt-3">Welcome to Lovely Gift Center — Super Bazar, Pathankot's neighbourhood wonderland for toys, celebration gifts, décor and unforgettable surprises. Every birthday, anniversary and childhood milestone deserves something truly magical.</p>
+      <div class="grid grid-cols-3 gap-2 md:gap-3 mt-5">
+        @for (s of [{ v: years + '+', l: 'Years of Joy' }, { v: '4.9★', l: 'Local Love' }, { v: '100%', l: 'Kid Safe' }]; track s.l) {
+          <div class="rounded-2xl bg-surface-container-lowest p-3 text-center shadow-sm">
+            <p class="font-label-price text-xl md:text-2xl font-bold text-primary">{{ s.v }}</p>
+            <p class="text-[11px] md:text-xs text-on-surface-variant">{{ s.l }}</p>
+          </div>
+        }
+      </div>
+    </div>
+    <figure class="relative rounded-3xl overflow-hidden shadow-level-2">
+      <img [src]="photos[0].src" [alt]="photos[0].alt" class="w-full h-72 md:h-[26rem] object-cover" />
+      <span class="absolute top-3 right-3 px-3 py-1 rounded-full bg-surface-container-lowest/90 text-xs font-semibold text-secondary flex items-center gap-1"><app-icon name="storefront" [size]="14" />Flagship Store</span>
+      <figcaption class="absolute bottom-3 left-3 px-3 py-2 rounded-2xl bg-surface-container-lowest/95 text-xs flex items-center gap-2 shadow-sm">
+        <app-icon name="schedule" [size]="18" class="text-primary" /><span><b class="block">Open 7 Days a Week</b>{{ store.hours }}</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- Guarantees -->
+  <section>
+    <h2 class="font-headline-sm text-headline-sm md:font-headline-lg md:text-headline-lg flex items-center gap-2 mb-4"><app-icon name="verified" class="text-primary" />Our Happy Guarantees</h2>
+    <div class="grid md:grid-cols-3 gap-3 md:gap-5">
+      @for (g of guarantees; track g.title) {
+        <div class="card p-4 md:p-6 flex md:flex-col gap-3">
+          <span class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0" [class]="g.disc"><app-icon [name]="g.icon" /></span>
+          <div><h3 class="font-headline-sm text-base font-semibold">{{ g.title }}</h3><p class="text-sm text-on-surface-variant">{{ g.text }}</p></div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Store photo gallery (real photos supplied by the shop) -->
+  <section>
+    <div class="flex items-end justify-between mb-4 gap-3">
+      <div>
+        <h2 class="font-headline-sm text-headline-sm md:font-headline-lg md:text-headline-lg">Come say hello in person!</h2>
+        <p class="text-sm text-on-surface-variant">Touch plushies, test board games and pick your wrapping ribbon right at our gifting counter.</p>
+      </div>
+      <span class="hidden sm:inline px-3 py-1 rounded-full bg-primary-fixed text-primary text-xs font-bold shrink-0">Walk-ins Welcome</span>
+    </div>
+    <div class="flex md:grid md:grid-cols-4 gap-3 overflow-x-auto no-scrollbar snap-x -mx-margin-mobile px-margin-mobile md:mx-0 md:px-0">
+      @for (p of photos.slice(1); track p.src; let i = $index) {
+        <button type="button" (click)="lightbox.set(i + 1)" class="snap-start shrink-0 w-56 md:w-auto rounded-2xl overflow-hidden relative group text-left" [attr.aria-label]="'Enlarge photo: ' + p.caption">
+          <img [src]="p.src" [alt]="p.alt" loading="lazy" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500" />
+          <span class="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 to-transparent text-white text-sm font-semibold">{{ p.caption }}</span>
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Find us -->
+  <section id="find-us" class="grid lg:grid-cols-2 gap-5">
+    <div class="flex flex-col gap-3">
+      <h2 class="font-headline-sm text-headline-sm md:font-headline-lg md:text-headline-lg flex items-center gap-2"><app-icon name="pin_drop" class="text-primary" />Find Us &amp; Reach Out</h2>
+      <div class="card p-4 flex gap-3">
+        <span class="w-11 h-11 rounded-full bg-primary-fixed text-primary flex items-center justify-center shrink-0"><app-icon name="location_on" /></span>
+        <div>
+          <p class="text-[11px] uppercase tracking-wide text-on-surface-variant font-semibold">Store location</p>
+          <p class="font-semibold">{{ address }}</p>
+          <p class="text-xs text-on-surface-variant mt-1">{{ store.legalName }} · GSTIN {{ store.gstin }}</p>
+        </div>
+      </div>
+      <a [href]="store.phoneHref" class="card p-4 flex items-center gap-3 hover:shadow-level-2 transition-all">
+        <span class="w-11 h-11 rounded-full bg-secondary-fixed text-secondary flex items-center justify-center shrink-0"><app-icon name="call" /></span>
+        <span class="flex-1"><span class="block text-[11px] uppercase tracking-wide text-on-surface-variant font-semibold">Call us</span><span class="font-semibold">{{ store.phoneDisplay }}</span></span>
+        <app-icon name="chevron_right" class="text-on-surface-variant" />
+      </a>
+      <a [href]="'mailto:' + store.email" class="card p-4 flex items-center gap-3 hover:shadow-level-2 transition-all">
+        <span class="w-11 h-11 rounded-full bg-tertiary-fixed text-tertiary flex items-center justify-center shrink-0"><app-icon name="mail" /></span>
+        <span class="flex-1"><span class="block text-[11px] uppercase tracking-wide text-on-surface-variant font-semibold">Email support</span><span class="font-semibold">{{ store.email }}</span></span>
+        <app-icon name="chevron_right" class="text-on-surface-variant" />
+      </a>
+      <div class="rounded-3xl bg-emerald-50 p-4 flex items-center gap-3">
+        <span class="w-11 h-11 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0"><app-icon name="chat" /></span>
+        <span class="flex-1"><span class="block text-[11px] uppercase tracking-wide text-emerald-800 font-semibold">Instant response</span><span class="font-semibold">WhatsApp: {{ store.phoneDisplay }}</span></span>
+        <a [href]="wa" target="_blank" rel="noopener" class="btn-whatsapp px-4 py-2 text-sm">Chat Now</a>
+      </div>
+    </div>
+    <div class="card overflow-hidden relative min-h-[18rem]">
+      <iframe [src]="mapsEmbed" title="Map showing Lovely Gift Centre, Super Bazar, Pathankot" class="w-full h-full min-h-[18rem] border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <a [href]="mapsLink" target="_blank" rel="noopener" class="absolute bottom-3 right-3 btn-primary px-4 py-2 text-sm"><app-icon name="navigation" [size]="18" />Get Directions</a>
+    </div>
+  </section>
+
+  <!-- Inquiry + FAQ -->
+  <section class="grid lg:grid-cols-2 gap-5 items-start">
+    <form (submit)="sendInquiry($event)" class="card p-5 md:p-6 flex flex-col gap-4" novalidate>
+      <div>
+        <span class="eyebrow text-secondary"><app-icon name="celebration" [size]="16" />Custom hamper &amp; bulk orders</span>
+        <h2 class="font-headline-md text-headline-md mt-1">Need a Tailored Gift Basket?</h2>
+        <p class="text-sm text-on-surface-variant">Share your idea and budget — our gifting stylists will reply on WhatsApp with options and photos.</p>
+      </div>
+      <label><span class="label">Your Name *</span>
+        <input class="field" name="iname" autocomplete="name" placeholder="e.g. Priya Sharma" [(ngModel)]="inquiry.name" [class.field-error]="errors().name" />
+        @if (errors().name) { <span class="text-error text-xs" role="alert">{{ errors().name }}</span> }
+      </label>
+      <label><span class="label">WhatsApp / Mobile Number *</span>
+        <input class="field" name="iphone" inputmode="tel" autocomplete="tel" placeholder="+91 98XXX XXXXX" [(ngModel)]="inquiry.phone" [class.field-error]="errors().phone" />
+        @if (errors().phone) { <span class="text-error text-xs" role="alert">{{ errors().phone }}</span> }
+      </label>
+      <label><span class="label">Occasion / Event Type</span>
+        <select class="field" name="iocc" [(ngModel)]="inquiry.occasion">
+          @for (o of occasions; track o) { <option [value]="o">{{ o }}</option> }
+        </select>
+      </label>
+      <label><span class="label">Message &amp; Budget</span>
+        <textarea rows="3" class="field resize-none" name="imsg" [(ngModel)]="inquiry.message" placeholder="e.g. Need 15 return gifts for a 6-year-old's party under ₹350 each, superhero theme…"></textarea>
+      </label>
+      <button type="submit" class="btn-primary py-3.5">Send Inquiry / WhatsApp Quote <app-icon name="send" [size]="18" /></button>
+    </form>
+
+    <div class="flex flex-col gap-3">
+      <h2 class="font-headline-sm text-headline-sm md:font-headline-md md:text-headline-md flex items-center gap-2"><app-icon name="quiz" class="text-primary" />Frequently Asked Questions</h2>
+      @for (f of faqs; track f.q; let first = $first) {
+        <app-accordion [title]="f.q" [defaultOpen]="first">{{ f.a }}</app-accordion>
+      }
+      <div class="rounded-3xl bg-gradient-to-br from-primary-fixed to-secondary-fixed p-6 text-center mt-2">
+        <span class="mx-auto w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center"><app-icon name="favorite" [fill]="true" /></span>
+        <h3 class="font-headline-sm text-headline-sm mt-2">Lovely Gift Center Promise</h3>
+        <p class="text-sm text-on-surface-variant">Crafted with pure heart, sprinkled with excitement, and delivered on time.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+@if (lightbox() !== null) {
+  <div class="fixed inset-0 z-[60] bg-black/80 flex items-center justify-center p-4 animate-fade-in" (click)="lightbox.set(null)" role="dialog" aria-modal="true" aria-label="Store photo" (keydown.escape)="lightbox.set(null)">
+    <img [src]="photos[lightbox()!].src" [alt]="photos[lightbox()!].alt" class="max-h-[85vh] max-w-full rounded-2xl" />
+    <button type="button" class="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/90 flex items-center justify-center" aria-label="Close photo"><app-icon name="close" /></button>
+  </div>
+}

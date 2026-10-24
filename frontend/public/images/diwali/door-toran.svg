@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Beaded marigold door toran with mango-leaf motifs">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1f7"/><stop offset="1" stop-color="#ffe4cc"/></linearGradient>
+    <radialGradient id="mari"><stop offset="0" stop-color="#fde047"/><stop offset=".6" stop-color="#f59e0b"/><stop offset="1" stop-color="#ea580c"/></radialGradient>
+    <linearGradient id="leaf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22c55e"/><stop offset="1" stop-color="#15803d"/></linearGradient>
+    <g id="flower"><circle r="15" fill="url(#mari)"/><circle r="5" fill="#c2410c"/></g>
+    <g id="strand">
+      <line x1="0" y1="0" x2="0" y2="120" stroke="#b20a68" stroke-width="2"/>
+      <circle cy="22" r="6" fill="#d33081"/><circle cy="40" r="6" fill="#fbbf24"/><circle cy="58" r="6" fill="#d33081"/>
+      <use href="#flower" y="84"/>
+      <path d="M0 102 Q-14 124 0 146 Q14 124 0 102Z" fill="url(#leaf)"/>
+    </g>
+  </defs>
+  <rect width="400" height="400" rx="32" fill="url(#bg)"/>
+  <!-- door frame hint -->
+  <rect x="24" y="40" width="352" height="330" rx="10" fill="none" stroke="#dfbec7" stroke-width="6"/>
+  <!-- top band of marigolds -->
+  <rect x="24" y="60" width="352" height="34" rx="10" fill="#b20a68"/>
+  <g>
+    <use href="#flower" x="48" y="77"/><use href="#flower" x="84" y="77"/><use href="#flower" x="120" y="77"/><use href="#flower" x="156" y="77"/><use href="#flower" x="192" y="77"/><use href="#flower" x="228" y="77"/><use href="#flower" x="264" y="77"/><use href="#flower" x="300" y="77"/><use href="#flower" x="336" y="77"/>
+  </g>
+  <!-- hanging strands, longer in the middle -->
+  <use href="#strand" x="56" y="94"/>
+  <use href="#strand" x="104" y="94"/>
+  <g transform="translate(152 94) scale(1 1.25)"><use href="#strand"/></g>
+  <g transform="translate(200 94) scale(1 1.45)"><use href="#strand"/></g>
+  <g transform="translate(248 94) scale(1 1.25)"><use href="#strand"/></g>
+  <use href="#strand" x="296" y="94"/>
+  <use href="#strand" x="344" y="94"/>
+  <text x="200" y="352" text-anchor="middle" font-family="Quicksand, sans-serif" font-size="16" font-weight="700" fill="#8d0050">Shubh Deepavali</text>
+</svg>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Star-shaped paper akash kandil hanging lantern">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d1b4e"/><stop offset="1" stop-color="#5a1d4a"/></linearGradient>
+    <radialGradient id="glow"><stop offset="0" stop-color="#fbbf24" stop-opacity=".75"/><stop offset="1" stop-color="#fbbf24" stop-opacity="0"/></radialGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f472b6"/><stop offset="1" stop-color="#d33081"/></linearGradient>
+  </defs>
+  <rect width="400" height="400" rx="32" fill="url(#bg)"/>
+  <g fill="#fde68a" opacity=".7"><circle cx="60" cy="80" r="2.5"/><circle cx="330" cy="60" r="2"/><circle cx="350" cy="140" r="2.5"/><circle cx="50" cy="210" r="2"/><circle cx="90" cy="330" r="2"/><circle cx="320" cy="320" r="2.5"/></g>
+  <line x1="200" y1="0" x2="200" y2="96" stroke="#fde68a" stroke-width="2"/>
+  <circle cx="200" cy="190" r="140" fill="url(#glow)"/>
+  <!-- 8-point star lantern -->
+  <path d="M200 96 L228 158 L292 140 L258 196 L292 252 L228 234 L200 296 L172 234 L108 252 L142 196 L108 140 L172 158Z" fill="url(#paper)" stroke="#fde68a" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M200 140 L218 180 L200 252 L182 180Z" fill="#fef3c7" opacity=".85"/>
+  <circle cx="200" cy="196" r="22" fill="#fde68a"/>
+  <circle cx="200" cy="196" r="10" fill="#f59e0b"/>
+  <!-- tassels -->
+  <g stroke="#fbbf24" stroke-width="3" stroke-linecap="round">
+    <path d="M200 296 v58"/><path d="M188 296 l-8 50"/><path d="M212 296 l8 50"/>
+    <path d="M108 252 l-4 40"/><path d="M292 252 l4 40"/>
+  </g>
+  <g fill="#f59e0b"><circle cx="200" cy="358" r="6"/><circle cx="180" cy="350" r="5"/><circle cx="220" cy="350" r="5"/><circle cx="104" cy="296" r="5"/><circle cx="296" cy="296" r="5"/></g>
+</svg>
